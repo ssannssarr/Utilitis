@@ -55,7 +55,7 @@ def main():
 	diff  = (run(['git','diff','--cached']).stdout or "")[:4000]
 
 	if not diff.strip():
-		print("No Changes To commit.")
+		print("[yellow]No Changes To commit.[/]")
 		return 
 
 	prompt =  f"""
@@ -68,7 +68,7 @@ def main():
 	{diff}
 	"""
 
-	with c.status("✦Thinking...",spinner="dots",spinner_style="#AB82FF"):
+	with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
 		msg = to_ai(prompt)
 
 	print(f'\nAI:{msg}')
@@ -87,9 +87,9 @@ def main():
 			push = run(['git','push'])
 			print(push.stdout)
 			print(push.stderr)
-			print("DONE!!")
+			print("[green]DONE!![/]")
 	else:
-		print("Commit Failed!!")
+		print("[red]Commit Failed!![/]")
 
 if __name__ == '__main__':
 	main()
