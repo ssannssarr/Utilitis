@@ -1,10 +1,11 @@
+from rich.console import Console
 import requests as rq
 import subprocess as sp
 import json
 import os 
 
 API_KEY = os.getenv("OPENROUTER_API_KEY") # Use whichever API you wanna USE.
-
+c = Console()
 
 def run(cmd):
 	return sp.run(
@@ -66,7 +67,9 @@ def main():
 	Diff:
 	{diff}
 	"""
-	msg = to_ai(prompt)
+
+	with c.status("✦Thinking...",spinner="dots",spinner_style="#AB82FF"):
+		msg = to_ai(prompt)
 
 	print(f'\nAI:{msg}')
 
