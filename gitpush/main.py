@@ -77,15 +77,17 @@ def main():
 	if confirm.lower() == 'n' or confirm.lower() == 'no':
 		msg = input("Enter commit message: ")
 
-	commit = run(['git','commit','-m',msg])
-	print(commit.stdout)
-	print(commit.stderr)
+	with c.status("",spinner="dots",spinner_style="#AB82FF"):	
+		commit = run(['git','commit','-m',msg])
+		print(commit.stdout)
+		print(commit.stderr)
 
 	if commit.returncode == 0:
-		push = run(['git','push'])
-		print(push.stdout)
-		print(push.stderr)
-		print("DONE!!")
+		with c.status("",spinner="dots",spinner_style="#AB82FF"):
+			push = run(['git','push'])
+			print(push.stdout)
+			print(push.stderr)
+			print("DONE!!")
 	else:
 		print("Commit Failed!!")
 
