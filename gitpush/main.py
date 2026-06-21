@@ -6,6 +6,11 @@ import json
 import os 
 
 API_KEY = os.getenv("OPENROUTER_API_KEY") # Use whichever API you wanna USE.
+if API_KEY == None:
+	print('[red]OPENROUTER_API_KEY Not Found IN ENVIOROMENT!![/]')
+	print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-vk-...<your-API-key>"')
+	exit()
+
 c = Console()
 
 def run(cmd):
@@ -46,10 +51,18 @@ def to_ai(prompt): # The messages that will go to Cloude or local AI
 		json=data
 	)
 	res = res.json()
+	#if res.
 	reply = res['choices'][0]['message']['content']
 	return reply 
 
 def main():
+
+	branch = run(["git",'branch','--show-current']).stdout or ''
+	print(f'Will you push to branch: [green] {branch} [/]')
+	branch_check = input(">> ").strip()
+	if branch_check.lower() == 'n' or branch_check.lower() == 'no':
+		exit()
+
 	run(['git','add','.'])
 
 	stat = run(['git','diff','--cached','--stat']).stdout or ""
@@ -70,7 +83,15 @@ def main():
 	"""
 
 	with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
-		msg = to_ai(prompt)
+		try:
+			msg = to_ai(prompt)
+		except rq.exceptions.ConnectionError as e:
+			print(f"[red]{type(e).__name__}[/]:{e}")
+			print('[yellow]hint:Chenk Your Network Connection')
+			exit()
+		except Exception as e:
+			print(f"[red]{type(e).__name__}[/]:{e}")
+			exit()
 
 	print(f'\nAI:{msg}')
 
@@ -93,4 +114,7 @@ def main():
 		print("[red]Commit Failed!![/]")
 
 if __name__ == '__main__':
-	main()
+	try:
+		main()
+	except KeyboardInterrupt:
+		None
