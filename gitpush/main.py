@@ -2,6 +2,7 @@ from rich.console import Console
 from rich import print
 import requests as rq
 import subprocess as sp
+import sys
 import json
 import os 
 
@@ -57,16 +58,29 @@ def to_ai(prompt): # The messages that will go to Cloude or local AI
 
 def main():
 
+	# BRANCH CHECK 
 	branch = run(["git",'branch','--show-current']).stdout or ''
 	print(f'Will you push to branch: [green] {branch} [/]')
 	branch_check = input(">> ").strip()
-	if branch_check.lower() == 'n' or branch_check.lower() == 'no':
+	if not branch_check.lower() in ('y','yes'):
+		print('[yellow]User Aborted[/]')
+		print('[yellow]hint: use git push -u origin <branch>')
 		exit()
+
+	#FILE CHECK
+	files = run(['git','status','--porcelain']).stdout or ''
+	print('This Files will be added')
+	print(files)
+	f_check = input("[y/n]>>").strip()
+	
+	if not f_check.lower() in ('yes','y'):
+		print("[yellow]Add in your Own[yellow]")
+
 
 	run(['git','add','.'])
 
 	stat = run(['git','diff','--cached','--stat']).stdout or ""
-	diff  = (run(['git','diff','--cached']).stdout or "")[:4000]
+	diff  = run(['git','diff','--cached']).stdout or ""
 
 	if not diff.strip():
 		print("[yellow]No Changes To commit.[/]")
@@ -86,8 +100,9 @@ def main():
 		try:
 			msg = to_ai(prompt)
 		except rq.exceptions.ConnectionError as e:
-			print(f"[red]{type(e).__name__}[/]:{e}")
-			print('[yellow]hint:Chenk Your Network Connection')
+			run(['git','reset','HEAD'])
+			print(f"[red]\n{type(e).__name__}[/]:\n{e}")
+			print('[yellow]hint:Chenk Your Network Connection[/]')
 			exit()
 		except Exception as e:
 			print(f"[red]{type(e).__name__}[/]:{e}")
