@@ -1,75 +1,131 @@
-# GITPUSH 
+# Gitpush
 
-As the name it automate the git push flow.
+"gitpush" is a small CLI utility that automates a common Git workflow.
 
-## Why this ?
+It stages your changes, generates a commit message using AI, lets you review the message, commits the changes, and then pushes them to GitHub.
 
-When do work on some project and commit repeatedly the commit messages became meaningless (T_T) and that time nothing comes to my mind so I made this workflow.
+---
 
-## How to use?
+## Features
 
-Clone the repo:
+- Detects whether you are inside a Git repository
+- Stages all changes automatically
+- Generates a commit message using AI
+- Lets you review or replace the generated message
+- Commits changes
+- Pulls with rebase before pushing
+- Pushes to the current branch
+
+---
+
+## Requirements
+
+- Python 3.13+
+- Git
+- An OpenRouter API key
+
+---
+
+## Installation
+
+**Clone the repository:**
+
 ```bash
-git clone https://github.com/ssannssarr/Utilitis
-cd 
+git clone https://github.com/ssannssarr/Utilitis.git
+cd Utilitis
+```
+**Install dependencies:**
+
+```bash
+uv sync
+```
+**Set your OpenRouter API key:**
+
+```bash
+export OPENROUTER_API_KEY="your-api-key"
+```
+---
+
+## Usage
+
+Run inside a Git repository:
+
+```bash
+uv run gitpush
+```
+or do:
+
+bash:
+```bash
+echo 'alias gitpush="uv run gitpush"' >> ~/.basrc 
+# then do 
+gitpush # inside git repo
+```
+zsh
+```zsh
+echo 'alias gitpush="uv run gitpush"' >> ~/.zshrc
+# then do 
+gitpush # inside git repo
+```
+ 
+**The tool will:**
+
+1. Verify that you are inside a Git repository.
+2. Show the current branch.
+3. Ask for confirmation before continuing.
+4. Show files that will be added.
+5. Stage all changes.
+6. Generate an AI commit message.
+7. Let you accept or replace the message.
+8. Commit the changes.
+9. Pull with rebase.
+10. Push to the current branch.
+
+---
+
+**Example Workflow**
+
+
+```bash
+$ gitpush
+
+Will you push to branch: main
+(y/n)>> y
+
+This Files will be added
+
+ M README.md
+ M main.py
+
+[y/n]>> y
+
+AI: docs: update README formatting
+
+Use this?
+[y/n]
+>> y
+
+DONE!!
 ```
 
+---
 
+## Environment Variables
 
-## What it has?
+|Variable| Description|
+|---|---|
+|OPENROUTER_API_KEY| API key used to generate commit messages|
 
-It has three part:
+---
 
-1. run()
-```python
-def run(cmd):
-	return sp.run(
-		cmd,
-		text=True,
-		capture_output=True,
-		encoding="utf-8",
-		errors="replace"
-	)
-```
-NOTE: `sp` is aliased form of Module `subprocess`.
+## Notes
 
-This is shortform of `subprocess.run()` with all `capture_output`,etc into all in one. So it becames easy later 
+- The generated commit message can always be edited before committing.
+- If there are no changes, the program exits without creating a commit.
+- If the AI request fails, staged changes are reset automatically.
 
-2. to_ai()
-```python
-def to_ai(prompt,API_KEY): 
-	url = "https://openrouter.ai/api/v1/chat/completions"
+---
 
-	headers={
-		"Authorization": f"Bearer {API_KEY}",
-		"Content-Type": "application/json",
-	}
+## License
 
-	data = {
-		"model":"openrouter/free",
-		"messages":[
-			{
-				"role":"system",
-				"content":"You are a git commit assistant. Reply in English only. Return ONE short conventional commit message only."
-			},
-			{
-				"role":"user",
-				"content":prompt,
-			},
-		]
-	}
-
-	res = rq.post(
-		url=url,
-		headers=headers,
-		json=data,
-		timeout=60
-	)
-	res = res.json()
-	reply = res['choices'][0]['message']['content']
-	return reply 
-```
-NOTE: `rq` is aliased form of Module `requests`
-
-
-The API calling part using requests library from Openrouter(You change that as your provider) 
+This project is part of the Utilitis repository.
