@@ -153,7 +153,7 @@ def main():
 	# FINAL PUSH DIRECTLY AFTER COMMIT 
 	if commit.returncode == 0:
 		with c.status("",spinner="dots",spinner_style="#AB82FF"):
-			pull = run('git','pull','--rebase')
+			pull = run(['git','pull','--rebase'])
 			print(pull.stdout)
 			print(pull.stderr)
 			if pull.returncode == 0:
