@@ -9,11 +9,6 @@ c = Console()
 
 
 
-API_KEY = os.getenv("OPENROUTER_API_KEY") # Use whichever API you wanna USE.
-if not API_KEY:
-	print('[red]OPENROUTER_API_KEY Not Found IN ENVIROMENT!![/]')
-	print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-v1-...<your-API-key>"')
-	exit()
 
 
 
@@ -27,11 +22,9 @@ def run(cmd):
 	)
 
 	
-if run(['git','rev-parse','--is-inside-work-tree']).returncode != 0:
-	print('[red]Not Inside Git Repo')
-	exit()
 
-def to_ai(prompt): # The messages that will go to Cloud or local AI
+
+def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 	url = "https://openrouter.ai/api/v1/chat/completions"
 
 	headers={
@@ -64,6 +57,15 @@ def to_ai(prompt): # The messages that will go to Cloud or local AI
 	return reply 
 
 def main():
+	API_KEY = os.getenv("OPENROUTER_API_KEY") # Use whichever API you wanna USE.
+	if not API_KEY:
+		print('[red]OPENROUTER_API_KEY Not Found IN ENVIROMENT!![/]')
+		print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-v1-...<your-API-key>"')
+		exit()
+
+	if run(['git','rev-parse','--is-inside-work-tree']).returncode != 0:
+		print('[red]Not Inside Git Repo[/]')
+		exit()
 
 	# BRANCH CHECK 
 	branch = run(["git",'branch','--show-current']).stdout or ''
@@ -76,7 +78,11 @@ def main():
 
 	#FILE CHECK
 	files = run(['git','status','--short']).stdout or ''
-	critical = ['.env','']
+	critical = ('.env','.key','pem')
+	if any(char in files for char in critical):
+		print(f'[red]Refused to stage --Found "{char}" in Changes[/]')
+		print('[yellow]hint:Put them into .gitignore first.[/]')
+		exit()
 
 	print('[#ffd39b]This Files will be added[/]')
 	print(files)
@@ -114,7 +120,7 @@ def main():
 	# THE CLOUD AI PROCESS 
 	with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
 		try:
-			msg = to_ai(prompt)
+			msg = to_ai(prompt,API_KEY)
 		except rq.exceptions.ConnectionError as e:
 			run(['git','reset','HEAD'])
 			print(f"[red]\n{type(e).__name__}[/]:\n{e}")
@@ -131,6 +137,7 @@ def main():
 	print('[yellow]\nUse this? [y/n][/]')
 	confirm = input(">> ").strip()
 	if not confirm.lower() in ('y','yes'):
+		msg = ''
 		while not msg:
 			msg = input("[#ffd39b]Enter commit message:[/] ").strip()
 
