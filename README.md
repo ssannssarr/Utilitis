@@ -1,4 +1,4 @@
-#Utilitis
+# Utilitis
 
 Utilitis is a collection of utility scripts and aliases designed to streamline daily development workflows. Currently, it features Gitpush — a tool that automates git push with AI-generated commit messages.
 
