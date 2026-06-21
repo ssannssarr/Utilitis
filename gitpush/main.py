@@ -68,7 +68,7 @@ def main():
 		exit()
 
 	# BRANCH CHECK 
-	branch = run(["git",'branch','--show-current']).stdout or ''
+	branch = run(["git",'branch','--show-current']).stdout.strip() or ''
 	print(f'[#ffd39b]Will you push to branch:[/] [green] {branch} [/]')
 	branch_check = input("(y/n)>> ").strip()
 	if not branch_check.lower() in ('y','yes'):
@@ -116,13 +116,13 @@ def main():
 		try:
 			msg = to_ai(prompt,API_KEY)
 		except rq.exceptions.ConnectionError as e:
-			run(['git','reset','HEAD'])
+			run(['git','reset'])
 			print(f"[red]\n{type(e).__name__}[/]:\n{e}")
 			print('[yellow]hint:Chenk Your Network Connection[/]')
 			exit()
 		except Exception as e:
 			print(f"[red]\n{type(e).__name__}[/]:\n{e}")
-			run(['git','reset','HEAD'])
+			run(['git','reset'])
 			exit()
 
 
