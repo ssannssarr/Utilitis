@@ -60,7 +60,7 @@ def main():
 
 	# BRANCH CHECK 
 	branch = run(["git",'branch','--show-current']).stdout or ''
-	print(f'Will you push to branch: [green] {branch} [/]')
+	print(f'[#ffd39b]Will you push to branch:[/] [green] {branch} [/]')
 	branch_check = input(">> ").strip()
 	if not branch_check.lower() in ('y','yes'):
 		print('[yellow]User Aborted[/]')
@@ -68,13 +68,14 @@ def main():
 		exit()
 
 	#FILE CHECK
-	files = run(['git','status','--porcelain']).stdout or ''
-	print('This Files will be added')
+	files = run(['git','status','--short']).stdout or ''
+	print('[#ffd39b]This Files will be added[/]')
 	print(files)
 	f_check = input("[y/n]>>").strip()
 	
 	if not f_check.lower() in ('yes','y'):
 		print("[yellow]Add in your Own[yellow]")
+		exit()
 
 
 	run(['git','add','.'])
@@ -105,14 +106,15 @@ def main():
 			print('[yellow]hint:Chenk Your Network Connection[/]')
 			exit()
 		except Exception as e:
-			print(f"[red]{type(e).__name__}[/]:{e}")
+			print(f"[red]\n{type(e).__name__}[/]:\n{e}")
 			exit()
 
 	print(f'\nAI:{msg}')
 
-	confirm = input('\nUse this? [y/n]')
+	print('[yellow]\nUse this? [y/n][/]')
+	confirm = input(">> ")
 	if confirm.lower() == 'n' or confirm.lower() == 'no':
-		msg = input("Enter commit message: ")
+		msg = input("[#ffd39b]Enter commit message:[/] ")
 
 	with c.status("",spinner="dots",spinner_style="#AB82FF"):	
 		commit = run(['git','commit','-m',msg])
