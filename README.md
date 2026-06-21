@@ -6,10 +6,10 @@ Utilitis is a collection of utility scripts and aliases designed to streamline d
 
 ## Features
 
-· AI-Powered Commit Messages – Automatically generates meaningful, conventional commit messages using AI.
-· Git Automation – Simplifies the git add, commit, and push flow.
-· Modular Structure – Each utility lives in its own folder with a dedicated README.
-· Lightweight & Extensible – Built with Python and easily customizable.
+- AI-Powered Commit Messages – Automatically generates meaningful, conventional commit messages using AI.
+- Git Automation – Simplifies the git add, commit, and push flow.
+- Modular Structure – Each utility lives in its own folder with a dedicated README.
+- Lightweight & Extensible – Built with Python and easily customizable.
 
 ---
 
