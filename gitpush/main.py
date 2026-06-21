@@ -78,12 +78,6 @@ def main():
 
 	#FILE CHECK
 	files = run(['git','status','--short']).stdout or ''
-	critical = ('.env','.key','pem')
-	if any(char in files for char in critical):
-		print(f'[red]Refused to stage --Found "{char}" in Changes[/]')
-		print('[yellow]hint:Put them into .gitignore first.[/]')
-		exit()
-
 	print('[#ffd39b]This Files will be added[/]')
 	print(files)
 	f_check = input("[y/n]>>").strip()
