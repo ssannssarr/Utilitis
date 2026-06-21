@@ -153,13 +153,20 @@ def main():
 	# FINAL PUSH DIRECTLY AFTER COMMIT 
 	if commit.returncode == 0:
 		with c.status("",spinner="dots",spinner_style="#AB82FF"):
-			push = run(['git','push'])
-			print(push.stdout)
-			print(push.stderr)
-			if push.returncode == 0:
-				print("[green]DONE!![/]")
+			pull = run('git','pull','--rebase')
+			print(pull.stdout)
+			print(pull.stderr)
+			if pull.returncode == 0:
+				with c.status("",spinner="dots",spinner_style="#AB82FF"):
+					push = run(['git','push'])
+					print(push.stdout)
+					print(push.stderr)
+					if push.returncode == 0:
+						print("[green]DONE!![/]")
+					else:
+						print("[red]Push Failed!![/]")
 			else:
-				print("[red]Push Failed!![/]")
+				print('[red]Pull Failed [/]')
 	else:
 		print("[red]Commit Failed!![/]")
 
