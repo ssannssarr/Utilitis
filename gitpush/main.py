@@ -1,18 +1,21 @@
 from rich.console import Console
 from rich import print
-import requests as rq
 import subprocess as sp
-import sys
+import requests as rq
 import json
+import sys
 import os 
 
+
+c = Console()
+
 API_KEY = os.getenv("OPENROUTER_API_KEY") # Use whichever API you wanna USE.
-if API_KEY == None:
+if not API_KEY:
 	print('[red]OPENROUTER_API_KEY Not Found IN ENVIOROMENT!![/]')
 	print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-vk-...<your-API-key>"')
 	exit()
 
-c = Console()
+
 
 def run(cmd):
 	return sp.run(
@@ -72,21 +75,23 @@ def main():
 	print('[#ffd39b]This Files will be added[/]')
 	print(files)
 	f_check = input("[y/n]>>").strip()
-	
 	if not f_check.lower() in ('yes','y'):
 		print("[yellow]Add in your Own[yellow]")
 		exit()
 
-
+	# ADD THE FILES
 	run(['git','add','.'])
 
+	# THE INFO THAT WILL BE SENT TO CLOUD AI TO FRAME THE MESSAGE 
 	stat = run(['git','diff','--cached','--stat']).stdout or ""
 	diff  = run(['git','diff','--cached']).stdout or ""
 
+	# FALLBACK IF NOTHINGS TO COMMIT 
 	if not diff.strip():
 		print("[yellow]No Changes To commit.[/]")
 		return 
 
+	# THE PROMPT 
 	prompt =  f"""
 	Generate ONE conventional commit message.
 
@@ -97,6 +102,8 @@ def main():
 	{diff}
 	"""
 
+
+	# THE CLOUD AI PROCESS 
 	with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
 		try:
 			msg = to_ai(prompt)
@@ -109,18 +116,23 @@ def main():
 			print(f"[red]\n{type(e).__name__}[/]:\n{e}")
 			exit()
 
+
+	# MESSAGE CONFIRM MATION BEFORE FINAL COMMIT
 	print(f'\nAI:{msg}')
-
 	print('[yellow]\nUse this? [y/n][/]')
-	confirm = input(">> ")
-	if confirm.lower() == 'n' or confirm.lower() == 'no':
-		msg = input("[#ffd39b]Enter commit message:[/] ")
+	confirm = input(">> ").strip()
+	if not confirm.lower() in ('y','yes'):
+		msg = input("[#ffd39b]Enter commit message:[/] ").strip()
 
+	# FINAL COMMIT 
 	with c.status("",spinner="dots",spinner_style="#AB82FF"):	
 		commit = run(['git','commit','-m',msg])
 		print(commit.stdout)
 		print(commit.stderr)
 
+
+
+	# FINAL PUSH DIRECTLY AFTER COMMIT 
 	if commit.returncode == 0:
 		with c.status("",spinner="dots",spinner_style="#AB82FF"):
 			push = run(['git','push'])
@@ -134,4 +146,4 @@ if __name__ == '__main__':
 	try:
 		main()
 	except KeyboardInterrupt:
-		None
+		print('[yellow]\nAborted By User![/]')
