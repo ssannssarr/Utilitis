@@ -2,17 +2,17 @@ from rich.console import Console
 from rich import print
 import subprocess as sp
 import requests as rq
-import json
-import sys
 import os 
 
 
 c = Console()
 
+
+
 API_KEY = os.getenv("OPENROUTER_API_KEY") # Use whichever API you wanna USE.
 if not API_KEY:
-	print('[red]OPENROUTER_API_KEY Not Found IN ENVIOROMENT!![/]')
-	print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-vk-...<your-API-key>"')
+	print('[red]OPENROUTER_API_KEY Not Found IN ENVIROMENT!![/]')
+	print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-v1-...<your-API-key>"')
 	exit()
 
 
@@ -26,8 +26,12 @@ def run(cmd):
 		errors="replace"
 	)
 
+	
+if run(['git','rev-parse','--is-inside-work-tree']).returncode != 0:
+	print('[red]Not Inside Git Repo')
+	exit()
 
-def to_ai(prompt): # The messages that will go to Cloude or local AI
+def to_ai(prompt): # The messages that will go to Cloud or local AI
 	url = "https://openrouter.ai/api/v1/chat/completions"
 
 	headers={
@@ -40,7 +44,7 @@ def to_ai(prompt): # The messages that will go to Cloude or local AI
 		"messages":[
 			{
 				"role":"system",
-				"content":"You are a git commit assistant. Reply in English only. Return ONE short conventinal commit message only."
+				"content":"You are a git commit assistant. Reply in English only. Return ONE short conventional commit message only."
 			},
 			{
 				"role":"user",
@@ -52,10 +56,10 @@ def to_ai(prompt): # The messages that will go to Cloude or local AI
 	res = rq.post(
 		url=url,
 		headers=headers,
-		json=data
+		json=data,
+		timeout=60
 	)
 	res = res.json()
-	#if res.
 	reply = res['choices'][0]['message']['content']
 	return reply 
 
@@ -64,7 +68,7 @@ def main():
 	# BRANCH CHECK 
 	branch = run(["git",'branch','--show-current']).stdout or ''
 	print(f'[#ffd39b]Will you push to branch:[/] [green] {branch} [/]')
-	branch_check = input(">> ").strip()
+	branch_check = input("(y/n)>> ").strip()
 	if not branch_check.lower() in ('y','yes'):
 		print('[yellow]User Aborted[/]')
 		print('[yellow]hint: use git push -u origin <branch>')
@@ -72,11 +76,13 @@ def main():
 
 	#FILE CHECK
 	files = run(['git','status','--short']).stdout or ''
+	critical = ['.env','']
+
 	print('[#ffd39b]This Files will be added[/]')
 	print(files)
 	f_check = input("[y/n]>>").strip()
 	if not f_check.lower() in ('yes','y'):
-		print("[yellow]Add in your Own[yellow]")
+		print("[yellow]Add in your Own[/]")
 		exit()
 
 	# ADD THE FILES
@@ -84,7 +90,9 @@ def main():
 
 	# THE INFO THAT WILL BE SENT TO CLOUD AI TO FRAME THE MESSAGE 
 	stat = run(['git','diff','--cached','--stat']).stdout or ""
-	diff  = run(['git','diff','--cached']).stdout or ""
+	diff  = (run(['git','diff','--cached']).stdout or "")[:4000]
+	if len(diff) >= 4000:
+		print('[yellow]Diff truncted at 4000 chars [/]')
 
 	# FALLBACK IF NOTHINGS TO COMMIT 
 	if not diff.strip():
@@ -114,6 +122,7 @@ def main():
 			exit()
 		except Exception as e:
 			print(f"[red]\n{type(e).__name__}[/]:\n{e}")
+			run(['git','reset','HEAD'])
 			exit()
 
 
@@ -122,7 +131,9 @@ def main():
 	print('[yellow]\nUse this? [y/n][/]')
 	confirm = input(">> ").strip()
 	if not confirm.lower() in ('y','yes'):
-		msg = input("[#ffd39b]Enter commit message:[/] ").strip()
+		while not msg:
+			msg = input("[#ffd39b]Enter commit message:[/] ").strip()
+
 
 	# FINAL COMMIT 
 	with c.status("",spinner="dots",spinner_style="#AB82FF"):	
@@ -138,7 +149,10 @@ def main():
 			push = run(['git','push'])
 			print(push.stdout)
 			print(push.stderr)
-			print("[green]DONE!![/]")
+			if push.returncode == 0:
+				print("[green]DONE!![/]")
+			else:
+				print("[red]Push Failed!![/]")
 	else:
 		print("[red]Commit Failed!![/]")
 
