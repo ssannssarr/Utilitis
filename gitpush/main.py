@@ -71,6 +71,9 @@ def main():
 
 	#FILE CHECK
 	files = run(['git','status','--short']).stdout or ''
+	if not files:
+		c.print('[yellow]No Changes To commit[/]')
+		exit()
 	c.print('[#ffd39b]This Files will be added[/]')
 	c.print(files)
 	f_check = input("[y/n]>>").strip()
