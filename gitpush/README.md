@@ -57,7 +57,7 @@ or do:
 
 bash:
 ```bash
-echo 'alias gitpush="uv run gitpush"' >> ~/.basrc 
+echo 'alias gitpush="uv run gitpush"' >> ~/.bashrc 
 # then do 
 gitpush # inside git repo
 ```
