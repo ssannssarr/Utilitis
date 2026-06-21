@@ -9,3 +9,10 @@ dependencies = [
     "requests>=2.34.2",
     "rich>=15.0.0",
 ]
+
+[project.scripts]
+gitpush = "gitpush.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
