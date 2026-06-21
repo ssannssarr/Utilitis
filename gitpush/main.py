@@ -133,7 +133,8 @@ def main():
 	if not confirm.lower() in ('y','yes'):
 		msg = ''
 		while not msg:
-			msg = input("[#ffd39b]Enter commit message:[/] ").strip()
+			print("[#ffd39b]Enter commit message:[/] ")
+			msg = input(">> ").strip()
 
 
 	# FINAL COMMIT 
