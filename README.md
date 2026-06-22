@@ -9,12 +9,13 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 ## Repository Structure
 
 ```txt
-Utilitis
-│
+.
+├── CONTRIBUTING.md
+├── LICENSE
 ├── README.md
 ├── gitpush
-│     ├── main.py
-|     └── README.md
+│   ├── README.md                                                                │   ├── __init__.py
+│   └── main.py
 ├── pyproject.toml
 └── uv.lock
 ```
