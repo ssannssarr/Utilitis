@@ -115,6 +115,8 @@ DONE!!
 
 <img src="./assets/NORMAL.gif">
 
+[NORMAL](./assests/NORMAL>gif)
+
 ---
 
 ## Environment Variables
