@@ -4,6 +4,8 @@
 
 It stages your changes, generates a commit message using AI, lets you review the message, commits the changes, and then pushes them to GitHub.
 
+It has two options one NORMAL mode with cmd `gitpush` and YOLO mode with cmd `gitpush-y` **-y stands for YOLO** in YOLO mode it only asks to review the commit msg so when using YOLO mode Be Aware what are actually pushing!
+
 ---
 
 ## Features
@@ -83,16 +85,16 @@ gitpush # inside git repo
 
 ---
 
-**Example Workflow**
+## Example Workflow
 
 
 ```bash
 $ gitpush
 
-Will you push to branch: main
+Will you push to branch: main # This dont happens on YOLO mode 
 (y/n)>> y
 
-This Files will be added
+This Files will be added # This also doesnt happen in YOLO mode 
 
  M README.md
  M main.py
@@ -101,12 +103,13 @@ This Files will be added
 
 AI: docs: update README formatting
 
-Use this?
+Use this? # This is default 'yes' in YOLO mode so you can just enter.
 [y/n]
 >> y
 
 DONE!!
 ```
+
 
 ---
 
