@@ -13,11 +13,13 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── README.md
-├── gitpush
-│		├── __init__.py
-│ 		├── README.md   
-│		└── main.py
 ├── pyproject.toml
+├── scripts
+│    ├── __init__.py
+│    └── gitpush
+│          ├── README.md
+│          ├── __init__.py
+│          └── main.py
 └── uv.lock
 ```
 
