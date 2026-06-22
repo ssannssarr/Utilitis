@@ -46,6 +46,7 @@ def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 		timeout=60
 	)
 	
+	res.raise_for_status()
 	res = res.json()
 	reply = res['choices'][0]['message']['content']
 	return reply 
