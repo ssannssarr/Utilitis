@@ -26,7 +26,7 @@ def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 	}
 
 	data = {
-		"model":"openrouter/free",
+		"model":"openai/gpt-oss-120b:free",
 		"messages":[
 			{
 				"role":"system",
