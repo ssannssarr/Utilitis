@@ -206,7 +206,7 @@ def YOLO():
 		c.print(f'\nAI:{msg}')
 		c.print('[yellow]\nUse this? [y/n][/]')
 		confirm = input(">> ").strip()
-		if not confirm.lower() in ('y','yes'):
+		if confirm.lower() in ('n','no'):
 			msg = ''
 			while not msg:
 				c.print("[#ffd39b]Enter commit message:[/] ")
