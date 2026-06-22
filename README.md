@@ -14,8 +14,9 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 ├── LICENSE
 ├── README.md
 ├── gitpush
-│   ├── README.md                                                                │   ├── __init__.py
-│   └── main.py
+|		├── __init__.py
+│ 		├── README.md   
+│		└── main.py
 ├── pyproject.toml
 └── uv.lock
 ```
