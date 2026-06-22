@@ -114,6 +114,7 @@ DONE!!
 ### NORMAL 
 
 <img src="./assets/NORMAL.gif">
+
 ---
 
 ## Environment Variables
