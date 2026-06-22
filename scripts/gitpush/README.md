@@ -109,13 +109,15 @@ Use this? # This is default 'yes' in YOLO mode so you can just enter.
 
 DONE!!
 ```
-## wORKFLOW
+## WORKFLOW
 
 ### NORMAL 
 
-<img src="./assets/NORMAL.gif">
-
 ![NORMAL](./assests/NORMAL.gif)
+
+### YOLO 
+
+![YOLO](./assests/YOLO.gif)
 
 ---
 
