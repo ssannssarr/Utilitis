@@ -158,89 +158,88 @@ def YOLO():
 	try:
 		API_KEY = os.getenv("OPENROUTER_API_KEY")
 		if not API_KEY:
-			c.print('[red]OPENROUTER_API_KEY Not Found in ENVIROMENT[/]')
-			c.print('[yellow]hint: export OPENROUTER_API_KEY="sk-or-v1-<your-API-key-here>"[/]')
-			c.print('[yellow]OR[/]')
-			c.print("""[yellow]hint: echo 'export OPENROUTER_API_KEY="<your-API-key-here>"' >> ~/.bashrc #to make it permanent [/]""")
+			c.print('[red]OPENROUTER_API_KEY Not Found IN ENVIROMENT!![/]')
+			c.print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-v1-...<your-API-key>"')
 			exit()
 
-		if run(['git','rev-parse','--is-work-tree']).returncode != 0:
-			c.print('[yellow]Not Inside a Git Repo!')
+		if run(['git','rev-parse','--is-inside-work-tree']).returncode != 0:
+			c.print('[red]Not Inside Git Repo[/]')
+			exit()
 
-		with c.status("",spinner="dots",spinner_style="#AB82FF"):
-			add = run(['git','add','.'])
-			if add.returncode == 0:
-				stat = run(['git','diff','--cahced','--stat']).stdout or ""
-				raw_diff = run(['git','diff','--cached']).stdout or ''
-				if len(raw_diff) > 4000:
-					c.print('[yellow]Diff truncted at 4000 chars[/]')
-				diff = raw_diff[:4000]
 
-				if not diff.strip():
-					c.print('[yellow]Noo changes to commit[/]')
+		run(['git','add','.'])
 
-				prompt = f"""
-				Generate ONE conventional commit message :
+		stat = run(['git','diff','--cached','--stat']).stdout or ""
+		raw_diff  = run(['git','diff','--cached']).stdout or ""
+		if len(raw_diff) >= 4000:
+			c.print('[yellow]Diff truncted at 4000 chars [/]')
+		diff = raw_diff[:4000]
 
-				Changed files:
-				{stat}
+		if not diff.strip():
+			c.print("[yellow]No Changes To commit.[/]")
+			return 
 
-				Diff(upto 4000 chars):
-				{diff}
-				"""
-				try:
-					msg = to_ai(prompt,API_KEY)
-				except rq.exceptions.ConnectionError as e:
-					run(['git','reset'])
-					c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
-					c.print('[yellow]hint:Chenk Your Network Connection[/]')
-					exit()
-				except Exception as e:
-					c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
-					run(['git','reset'])
-					exit()
+		prompt =  f"""
+		Generate ONE conventional commit message.
 
-				c.print(f'\nAI:\n{msg}')
-				c.print('[yellow]Use This?[/]')
-				confirm = input('[y/n]>> ').strip()
-				if confirm.lower() in ('n','no'):
-					msg = ''
-					while not msg:
-						c.print('[#ffd39b]Enter your commit message:')
-						msg = input('>> ').strip()
+		Changed files:
+		{stat}
 
-				commit = run(['git','commit','-m',msg])
-				c.print(commit.stdout)
-				c.print(commit.stderr)
+		Diff:
+		{diff}
+		"""
 
-				if commit.returncode == 0:
-					pull = run(['git','pull','--rebase'])
-					c.print(pull.stdout)
-					c.print(pull.stderr)
+		with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
+			try:
+				msg = to_ai(prompt,API_KEY)
+			except rq.exceptions.ConnectionError as e:
+				run(['git','reset'])
+				c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
+				c.print('[yellow]hint:Chenk Your Network Connection[/]')
+				exit()
+			except Exception as e:
+				c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
+				run(['git','reset'])
+				exit()
 
-					if pull.returncode == 0:
-						push = run(['git','push'])
-						c.print(push.stdout)
-						c.print(push.stderr)
+		c.print(f'\nAI:{msg}')
+		c.print('[yellow]\nUse this? [y/n][/]')
+		confirm = input(">> ").strip()
+		if not confirm.lower() in ('y','yes'):
+			msg = ''
+			while not msg:
+				c.print("[#ffd39b]Enter commit message:[/] ")
+				msg = input(">> ").strip()
 
-						if  push.returncode == 0:
-							c.print('[green]DONE!![/]')
-						else:
-							c.print('[red]Push Failed![/]')
+		with c.status("",spinner="dots",spinner_style="#AB82FF"):	
+			commit = run(['git','commit','-m',msg])
+			c.print(commit.stdout)
+			c.print(commit.stderr)
+
+		if commit.returncode == 0:
+			with c.status("",spinner="dots",spinner_style="#AB82FF"):
+				pull = run(['git','pull','--rebase'])
+				c.print(pull.stdout)
+				c.print(pull.stderr)
+				if pull.returncode == 0:
+					push = run(['git','push'])
+					c.print(push.stdout)
+					c.print(push.stderr)
+					if push.returncode == 0:
+						c.print("[green]DONE!![/]")
 					else:
-						c.print('[red]Pul Failed![/]')
+						c.print("[red]Push Failed!![/]")
 				else:
-					c.print('[red]Commit Failed!![/]')
-			else:
-				c.print('[red]Add Failed[/]')
+					c.print('[red]Pull Failed [/]')
+		else:
+			c.print("[red]Commit Failed!![/]")
 	except KeyboardInterrupt:
-		c.print('[yellow]Aborted by User[/]')
+		c.print('[yellow]Aborted By User[/]')
 	except Exception as e:
-		c.print(f"[red]{type(e)}[/]:{e}")
+		run(['git','reset'])
+		c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
+		exit()
 
 
 if __name__ == '__main__':
-	try:
-		main()
-	except KeyboardInterrupt:
-		c.print('[yellow]\nAborted By User![/]')
+	main()

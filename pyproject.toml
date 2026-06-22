@@ -12,6 +12,7 @@ dependencies = [
 
 [project.scripts]
 gitpush = "gitpush.main:main"
+gitpush-y = "gitpush.main:YOLO"
 
 [build-system]
 requires = ["setuptools>=68"]
