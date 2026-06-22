@@ -13,7 +13,8 @@ Utilitis
 │
 ├── README.md
 ├── gitpush
-│   └── main.py
+│     ├── main.py
+|     └── README.md
 ├── pyproject.toml
 └── uv.lock
 ```
