@@ -45,6 +45,7 @@ def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 		json=data,
 		timeout=60
 	)
+	
 	res = res.json()
 	reply = res['choices'][0]['message']['content']
 	return reply 
@@ -83,7 +84,7 @@ def main():
 		run(['git','add','.'])
 
 		stat = run(['git','diff','--cached','--stat']).stdout or ""
-		raw_diff  = (run(['git','diff','--cached']).stdout or "")
+		raw_diff  = run(['git','diff','--cached']).stdout or ""
 		if len(raw_diff) >= 4000:
 			c.print('[yellow]Diff truncted at 4000 chars [/]')
 		diff = raw_diff[:4000]
@@ -152,6 +153,91 @@ def main():
 		run(['git','reset'])
 		c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
 		exit()
+
+def YOLO():
+	try:
+		API_KEY = os.getenv("OPENROUTER_API_KEY")
+		if not API_KEY:
+			c.print('[red]OPENROUTER_API_KEY Not Found in ENVIROMENT[/]')
+			c.print('[yellow]hint: export OPENROUTER_API_KEY="sk-or-v1-<your-API-key-here>"[/]')
+			c.print('[yellow]OR[/]')
+			c.print("""[yellow]hint: echo 'export OPENROUTER_API_KEY="<your-API-key-here>"' >> ~/.bashrc #to make it permanent [/]""")
+			exit()
+
+		if run(['git','rev-parse','--is-work-tree']).returncode != 0:
+			c.print('[yellow]Not Inside a Git Repo!')
+
+		with c.status("",spinner="dots",spinner_style="#AB82FF"):
+			add = run(['git','add','.'])
+			if add.returncode == 0:
+				stat = run(['git','diff','--cahced','--stat']).stdout or ""
+				raw_diff = run(['git','diff','--cached']).stdout or ''
+				if len(raw_diff) > 4000:
+					c.print('[yellow]Diff truncted at 4000 chars[/]')
+				diff = raw_diff[:4000]
+
+				if not diff.strip():
+					c.print('[yellow]Noo changes to commit[/]')
+
+				prompt = f"""
+				Generate ONE conventional commit message :
+
+				Changed files:
+				{stat}
+
+				Diff(upto 4000 chars):
+				{diff}
+				"""
+				try:
+					msg = to_ai(prompt,API_KEY)
+				except rq.exceptions.ConnectionError as e:
+					run(['git','reset'])
+					c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
+					c.print('[yellow]hint:Chenk Your Network Connection[/]')
+					exit()
+				except Exception as e:
+					c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
+					run(['git','reset'])
+					exit()
+
+				c.print(f'\nAI:\n{msg}')
+				c.print('[yellow]Use This?[/]')
+				confirm = input('[y/n]>> ').strip()
+				if confirm.lower() in ('n','no'):
+					msg = ''
+					while not msg:
+						c.print('[#ffd39b]Enter your commit message:')
+						msg = input('>> ').strip()
+
+				commit = run(['git','commit','-m',msg])
+				c.print(commit.stdout)
+				c.print(commit.stderr)
+
+				if commit.returncode == 0:
+					pull = run(['git','pull','--rebase'])
+					c.print(pull.stdout)
+					c.print(pull.stderr)
+
+					if pull.returncode == 0:
+						push = run(['git','push'])
+						c.print(push.stdout)
+						c.print(push.stderr)
+
+						if  push.returncode == 0:
+							c.print('[green]DONE!![/]')
+						else:
+							c.print('[red]Push Failed![/]')
+					else:
+						c.print('[red]Pul Failed![/]')
+				else:
+					c.print('[red]Commit Failed!![/]')
+			else:
+				c.print('[red]Add Failed[/]')
+	except KeyboardInterrupt:
+		c.print('[yellow]Aborted by User[/]')
+	except Exception as e:
+		c.print(f"[red]{type(e)}[/]:{e}")
+
 
 if __name__ == '__main__':
 	try:
