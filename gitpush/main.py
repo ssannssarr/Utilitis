@@ -63,18 +63,18 @@ def main():
 	# BRANCH CHECK 
 	branch = run(["git",'branch','--show-current']).stdout.strip() or ''
 	c.print(f'[#ffd39b]Will you push to branch:[/] [green] {branch} [/]')
-	branch_check = input("(y/n)>> ").strip()
+	branch_check = input("[y/n]>> ").strip()
 	if not branch_check.lower() in ('y','yes'):
 		c.print('[yellow]User Aborted[/]')
 		c.print('[yellow]hint: use git push -u origin <branch>')
 		exit()
 
 	#FILE CHECK
-	files = run(['git','status','--short']).stdout or ''
+	files = run(['git','status','--short']).stdout.strip() or ''
 	if not files:
 		c.print('[yellow]No Changes To commit[/]')
 		exit()
-	c.print('[#ffd39b]This Files will be added[/]')
+	c.print('[#ffd39b]\nThis Files will be added[/]')
 	c.print(files)
 	f_check = input("[y/n]>>").strip()
 	if not f_check.lower() in ('yes','y'):
