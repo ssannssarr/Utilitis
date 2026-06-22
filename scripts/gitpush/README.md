@@ -34,7 +34,7 @@ It has two options one NORMAL mode with cmd `gitpush` and YOLO mode with cmd `gi
 curl https://raw.githubusercontent.com/ssannssarr/Utilitis/refs/heads/main/install.sh | sh 
 ```
 
-It will automacticlly clone the repo and install the package to globally. You can see the script at [install.sh](../install.sh).
+It will automacticlly clone the repo and install the package to globally. You can see the script at [install.sh](https://github.com/ssannssarr/Utilitis/blob/main/install.sh) 
 
 ---
 
@@ -110,4 +110,4 @@ DONE!!
 
 ## License
 
-This project is under GPL-v3. See the the LICENSE [here](../LICENSE)
+This project is under GPL-3.0. See the the LICENSE [here](https://github.com/ssannssarr/Utilitis/blob/main/LICENSE) 
