@@ -28,13 +28,16 @@ else
 fi
 
 if command -v uv >/dev/null 2>&1; then
-	installer_cmd="uv pip install ."
+	installer_cmd="uv tool install ."
 else
+	if [ -n "${VIRTUAL_ENV:-}" ]; then
+		die "Error: deactivate the active virtual environment or install uv first if you want a non-.venv install."
+	fi
 	if ! "$python_cmd" -m pip --version >/dev/null 2>&1; then
 		"$python_cmd" -m ensurepip --upgrade >/dev/null 2>&1 || true
 	fi
 	if "$python_cmd" -m pip --version >/dev/null 2>&1; then
-		installer_cmd="$python_cmd -m pip install ."
+		installer_cmd="$python_cmd -m pip install --user ."
 	else
 		die "Error: pip is required but could not be initialized."
 	fi
