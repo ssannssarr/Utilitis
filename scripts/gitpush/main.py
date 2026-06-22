@@ -88,6 +88,7 @@ def main():
 		raw_diff  = run(['git','diff','--cached']).stdout or ""
 		if len(raw_diff) >= 4000:
 			c.print('[yellow]Diff truncted at 4000 chars [/]')
+			promt.append("\nThis is first 4000 chars from diff.")
 		diff = raw_diff[:4000]
 
 		if not diff.strip():
@@ -175,6 +176,7 @@ def YOLO():
 			raw_diff  = run(['git','diff','--cached']).stdout or ""
 			if len(raw_diff) >= 4000:
 				c.print('[yellow]Diff truncted at 4000 chars [/]')
+				promt.append("\nThis is first 4000 chars from diff.")
 			diff = raw_diff[:4000]
 
 			if not diff.strip():
