@@ -115,7 +115,7 @@ DONE!!
 
 <img src="./assets/NORMAL.gif">
 
-[NORMAL](./assests/NORMAL.gif)
+![NORMAL](./assests/NORMAL.gif)
 
 ---
 
