@@ -30,8 +30,8 @@ Examples include:
 
 ## Coding Guidelines
 
-- Keep code simple and readable. (At least an Human should know what is written😂)
-- Add comments only when they improve understanding. (In simple Word dont make Comment jungle. ^;^ )
+- Keep code simple and readable. (At least a human should know what is written😂)
+- Add comments only when they improve understanding. (In simple words, don't make comment jungle. ^;^ )
 - Avoid unnecessary dependencies. 
 
 ---
@@ -40,7 +40,7 @@ Examples include:
 
 When opening a pull request:
 
-1. Clearly describe what changed. (Simple? Short? -OK Just explain what you done)
+1. Clearly describe what changed. (Simple? Short? -OK Just explain what you've done)
 2. Explain why the change is useful.(Explain Why?)
 
 ---
@@ -56,9 +56,9 @@ If you find a bug, please include:
 
 ---
 
-## Devlopment 
+## Development 
 
-> NOTE: This project uses `uv` as its package manager.If you dont have uv download it from [Astral.sh](https://docs.astral.sh/uv/).
+> NOTE: This project uses `uv` as its package manager. If you don't have `uv`, download it from [Astral.sh](https://docs.astral.sh/uv/).
 
 1. Fork the repo
 
@@ -82,7 +82,7 @@ If you find a bug, please include:
 
 		> This helps to distinguish who is doing what!
 
-4. Install the dependancies:
+4. Install the dependencies:
 	```bash
 	uv sync
 	```

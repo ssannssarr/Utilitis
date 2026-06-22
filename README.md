@@ -25,20 +25,20 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 
 ---
 
-## Instalation
+## Installation
 
 ```bash
 curl https://raw.githubusercontent.com/ssannssarr/Utilitis/refs/heads/main/install.sh | sh 
 ```
-It will automacticlly clone the repo and install the package to globally. You can see the script at [install.sh](./install.sh).
+It will automatically clone the repo and install the package globally. You can see the script at [install.sh](./install.sh).
 
 
 ## Projects
 
 |**Project Name**|**Description**|
 |---|---|
-|[Gitpush](./scripts/gitpush)| As per the name it autmatomates git add to pus workflow with AI writing a conventional commit msg|
-|More projects| more projects comming soon and all of you are welcome to make this repo full|
+|[Gitpush](./scripts/gitpush)| As per the name it automates the git add-to-push workflow with AI writing a conventional commit message|
+|More projects| more projects coming soon and all of you are welcome to make this repo full|
 
 ---
 
