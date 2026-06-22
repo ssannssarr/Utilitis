@@ -113,8 +113,7 @@ DONE!!
 
 ### NORMAL 
 
-<img src=".assets/NORMAL.gif" >
-
+<img src="./assets/NORMAL.gif">
 ---
 
 ## Environment Variables
