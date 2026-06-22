@@ -4,7 +4,7 @@
 
 It stages your changes, generates a commit message using AI, lets you review the message, commits the changes, and then pushes them to GitHub.
 
-It has two options one NORMAL mode with cmd `gitpush` and YOLO mode with cmd `gitpush-y` **-y stands for YOLO** in YOLO mode it only asks to review the commit msg so when using YOLO mode Be Aware what are actually pushing!
+It has two options: NORMAL mode with cmd `gitpush` and YOLO mode with cmd `gitpush-y`. **-y stands for YOLO.** In YOLO mode, it only asks you to review the commit message, so when using YOLO mode be aware of what you are actually pushing!
 
 ---
 
@@ -34,7 +34,7 @@ It has two options one NORMAL mode with cmd `gitpush` and YOLO mode with cmd `gi
 curl https://raw.githubusercontent.com/ssannssarr/Utilitis/refs/heads/main/install.sh | sh 
 ```
 
-It will automacticlly clone the repo and install the package to globally. You can see the script at [install.sh](https://github.com/ssannssarr/Utilitis/blob/main/install.sh) 
+It will automatically clone the repo and install the package globally. You can see the script at [install.sh](https://github.com/ssannssarr/Utilitis/blob/main/install.sh) 
 
 ---
 
@@ -57,10 +57,10 @@ It will automacticlly clone the repo and install the package to globally. You ca
 ```bash
 $ gitpush
 
-Will you push to branch: main # This dont happens on YOLO mode 
+Will you push to branch: main # This doesn't happen in YOLO mode 
 (y/n)>> y
 
-This Files will be added # This also doesnt happen in YOLO mode 
+These files will be added # This also doesn't happen in YOLO mode 
 
  M README.md
  M main.py
@@ -82,11 +82,11 @@ DONE!!
 
 ### NORMAL 
 
-![NORMAL](./assests/NORMAL.gif)
+![NORMAL](./assets/NORMAL.gif)
 
 ### YOLO 
 
-![YOLO](./assests/YOLO.gif)
+![YOLO](./assets/YOLO.gif)
 
 ---
 
@@ -96,7 +96,7 @@ DONE!!
 |---|---|
 |OPENROUTER_API_KEY| API key used to generate commit messages|
 
-> You can get free API key at [Openrouter](https://openrouter.ai/).I used `openai/gpt-oss-120b:free`  as default you can configure the model at [main.py](./main.py)
+> You can get a free API key at [OpenRouter](https://openrouter.ai/). I used `openai/gpt-oss-120b:free` as the default, and you can configure the model in [main.py](./main.py)
 
 ---
 
@@ -110,4 +110,4 @@ DONE!!
 
 ## License
 
-This project is under GPL-3.0. See the the LICENSE [here](https://github.com/ssannssarr/Utilitis/blob/main/LICENSE) 
+This project is under GPL-3.0. See the LICENSE [here](https://github.com/ssannssarr/Utilitis/blob/main/LICENSE) 
