@@ -57,18 +57,7 @@ uv run gitpush
 ```
 or do:
 
-bash:
-```bash
-echo 'alias gitpush="uv run gitpush"' >> ~/.bashrc 
-# then do 
-gitpush # inside git repo
-```
-zsh
-```zsh
-echo 'alias gitpush="uv run gitpush"' >> ~/.zshrc
-# then do 
-gitpush # inside git repo
-```
+run [bash.sh](./alias/bash.sh) to setup alias or [zsh.sh](./alias/zsh.sh) if you use zsh. (This will automatically setup aliases for `gitpush` and `gitpush-y` at ~/.bashrc or at ~/.zshrc )
  
 **The tool will:**
 
@@ -103,7 +92,7 @@ This Files will be added # This also doesnt happen in YOLO mode
 
 AI: docs: update README formatting
 
-Use this? # This is default 'yes' in YOLO mode so you can just enter.
+Use this? # This is default 'yes' in YOLO mode so you can just hit enter.
 [y/n]
 >> y
 
@@ -126,6 +115,8 @@ DONE!!
 |Variable| Description|
 |---|---|
 |OPENROUTER_API_KEY| API key used to generate commit messages|
+
+> You can get free API key at [Openrouter](https://openrouter.ai/).I used `openai/gpt-oss-120b:free`  as default you can configure the model at [main.py](./main.py)
 
 ---
 
