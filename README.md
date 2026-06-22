@@ -15,11 +15,11 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 ├── README.md
 ├── pyproject.toml
 ├── scripts
-│    ├── __init__.py
-│    └── gitpush
-│          ├── README.md
-│          ├── __init__.py
-│          └── main.py
+│	 ├── __init__.py
+│    └── gitpush
+│          ├── README.md
+│          ├── __init__.py
+│          └── main.py
 └── uv.lock
 ```
 
