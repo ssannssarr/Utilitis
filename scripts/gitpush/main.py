@@ -51,6 +51,25 @@ def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 	reply = res['choices'][0]['message']['content']
 	return reply 
 
+
+def build_prompt(stat, raw_diff):
+	diff = raw_diff[:4000]
+	note = ""
+	if len(raw_diff) > 4000:
+		c.print('[yellow]Diff truncated at 4000 chars.[/]')
+		note = "\n\nNote: The diff was truncated to the first 4000 characters."
+
+	return f"""
+	Generate ONE conventional commit message.
+
+	Changed files:
+	{stat}
+	{note}
+
+	Diff:
+	{diff}
+	"""
+
 def main():
 	try:
 		API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -64,6 +83,9 @@ def main():
 			exit()
 
 		branch = run(["git",'branch','--show-current']).stdout.strip() or ''
+		if not branch:
+			c.print('[red]Detached HEAD detected. Please checkout a branch before using gitpush.[/]')
+			exit()
 		c.print(f'[#ffd39b]Will you push to branch:[/] [green] {branch} [/]')
 		branch_check = input("[y/n]>> ").strip()
 		if not branch_check.lower() in ('y','yes'):
@@ -86,24 +108,11 @@ def main():
 
 		stat = run(['git','diff','--cached','--stat']).stdout or ""
 		raw_diff  = run(['git','diff','--cached']).stdout or ""
-		if len(raw_diff) >= 4000:
-			c.print('[yellow]Diff truncted at 4000 chars [/]')
-			prompt.append("\nThis is first 4000 chars from diff.")
-		diff = raw_diff[:4000]
-
-		if not diff.strip():
+		if not raw_diff.strip():
 			c.print("[yellow]No Changes To commit.[/]")
 			return 
 
-		prompt =  f"""
-		Generate ONE conventional commit message.
-
-		Changed files:
-		{stat}
-
-		Diff:
-		{diff}
-		"""
+		prompt = build_prompt(stat, raw_diff)
 
 		with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
 			try:
@@ -168,30 +177,22 @@ def YOLO():
 			c.print('[red]Not Inside Git Repo[/]')
 			exit()
 
+		branch = run(["git",'branch','--show-current']).stdout.strip() or ''
+		if not branch:
+			c.print('[red]Detached HEAD detected. Please checkout a branch before using gitpush-y.[/]')
+			exit()
+
 
 		run(['git','add','.'])
 
 		with c.status("Extracting Diff ...", spinner="dots",spinner_style="#AB82FF"):
 			stat = run(['git','diff','--cached','--stat']).stdout or ""
 			raw_diff  = run(['git','diff','--cached']).stdout or ""
-			if len(raw_diff) >= 4000:
-				c.print('[yellow]Diff truncted at 4000 chars [/]')
-				prompt.append("\nThis is first 4000 chars from diff.")
-			diff = raw_diff[:4000]
-
-			if not diff.strip():
+			if not raw_diff.strip():
 				c.print("[yellow]No Changes To commit.[/]")
 				return 
 
-		prompt =  f"""
-		Generate ONE conventional commit message.
-
-		Changed files:
-		{stat}
-
-		Diff:
-		{diff}
-		"""
+		prompt = build_prompt(stat, raw_diff)
 
 		with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
 			try:
