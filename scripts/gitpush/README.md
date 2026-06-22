@@ -109,7 +109,11 @@ Use this? # This is default 'yes' in YOLO mode so you can just enter.
 
 DONE!!
 ```
+## wORKFLOW
 
+### NORMAL 
+
+<img src=".assets/NORMAL.gif" width='200px'>
 
 ---
 
