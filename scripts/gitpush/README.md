@@ -113,7 +113,7 @@ DONE!!
 
 ### NORMAL 
 
-<img src=".assets/NORMAL.gif" width='200px'>
+<img src=".assets/NORMAL.gif" >
 
 ---
 
