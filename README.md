@@ -25,6 +25,14 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 
 ---
 
+## Instalation
+
+```bash
+curl https://raw.githubusercontent.com/ssannssarr/Utilitis/refs/heads/main/install.sh | sh 
+```
+It will automacticlly clone the repo and install the package to globally. You can see the script at [install.sh](./install.sh).
+
+
 ## Projects
 
 |**Project Name**|**Description**|
@@ -38,7 +46,7 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 
 Everyone who wants to contribute is welcome.
 
-Before getting started, please read [CONTRIBUTING.md](CONTRIBUTING.md).
+Before getting started, please read [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ---
 

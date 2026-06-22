@@ -1,5 +1,7 @@
 # Contributing
 
+<b align="center">WELCOME! WELCOME!</b>
+
 Thank you for your interest in contributing to **Utilitis**.
 
 This repository contains scripts and utilities that I use in my daily workflow. Contributions are welcome as long as they align with the purpose of the project.
@@ -10,8 +12,8 @@ This repository contains scripts and utilities that I use in my daily workflow. 
 
 Please:
 
-- Read the project README.
-- Check existing issues and pull requests before creating a new one.
+- Read the project [README](./README.md) .
+- Check existing [issues](https://github.com/ssannssarr/Utilitis/issues) and pull requests before creating a new one.
 - Keep changes focused and easy to review.
 
 ---
@@ -26,14 +28,11 @@ Examples include:
 - New utility scripts that fit the project's purpose
 - Performance or reliability improvements
 
----
-
 ## Coding Guidelines
 
-- Follow existing code style where practical.
-- Keep code simple and readable.
-- Add comments only when they improve understanding.
-- Avoid unnecessary dependencies.
+- Keep code simple and readable. (At least an Human should know what is written😂)
+- Add comments only when they improve understanding. (In simple Word dont make Comment jungle. ^;^ )
+- Avoid unnecessary dependencies. 
 
 ---
 
@@ -41,9 +40,8 @@ Examples include:
 
 When opening a pull request:
 
-1. Clearly describe what changed.
-2. Explain why the change is useful.
-3. Keep pull requests focused on a single improvement whenever possible.
+1. Clearly describe what changed. (Simple? Short? -OK Just explain what you done)
+2. Explain why the change is useful.(Explain Why?)
 
 ---
 
@@ -55,6 +53,45 @@ If you find a bug, please include:
 - What you expected to happen
 - Steps to reproduce the issue
 - Relevant error messages or screenshots
+
+---
+
+## Devlopment 
+
+> NOTE: This project uses `uv` as its package manager.If you dont have uv download it from [Astral.sh](https://docs.astral.sh/uv/).
+
+1. Fork the repo
+
+2. Clone the repo & Go to the repo:
+	```bash
+	git clone https://github.com/<your-username>/Utilitis
+	cd Utilitis
+	```
+
+3. Create new branch 
+	```bash 
+	git checkout -b "feat: <describe-the-feature>"
+	```
+	- Try to keep the branch name in this format:
+
+		|**TYPE**|**DESCRIPTION**|
+		|---|---|
+		|feat:|when adding new feature|
+		|fix:|when fixing a bug|
+		|doc:|when working on documentation|
+
+		> This helps to distinguish who is doing what!
+
+4. Install the dependancies:
+	```bash
+	uv sync
+	```
+	**OR**
+	```bash
+	pip install -e . 
+	```
+
+5. Start working.
 
 ---
 

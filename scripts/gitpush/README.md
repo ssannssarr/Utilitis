@@ -30,35 +30,16 @@ It has two options one NORMAL mode with cmd `gitpush` and YOLO mode with cmd `gi
 
 ## Installation
 
-**Clone the repository:**
-
 ```bash
-git clone https://github.com/ssannssarr/Utilitis.git
-cd Utilitis
+curl https://raw.githubusercontent.com/ssannssarr/Utilitis/refs/heads/main/install.sh | sh 
 ```
-**Install dependencies:**
 
-```bash
-uv sync
-```
-**Set your OpenRouter API key:**
+It will automacticlly clone the repo and install the package to globally. You can see the script at [install.sh](../install.sh).
 
-```bash
-export OPENROUTER_API_KEY="your-api-key"
-```
 ---
 
-## Usage
+## Example Workflow
 
-Run inside a Git repository:
-
-```bash
-uv run gitpush
-```
-or do:
-
-run [bash.sh](./alias/bash.sh) to setup alias or [zsh.sh](./alias/zsh.sh) if you use zsh. (This will automatically setup aliases for `gitpush` and `gitpush-y` at ~/.bashrc or at ~/.zshrc )
- 
 **The tool will:**
 
 1. Verify that you are inside a Git repository.
@@ -71,10 +52,6 @@ run [bash.sh](./alias/bash.sh) to setup alias or [zsh.sh](./alias/zsh.sh) if you
 8. Commit the changes.
 9. Pull with rebase.
 10. Push to the current branch.
-
----
-
-## Example Workflow
 
 
 ```bash
@@ -98,6 +75,9 @@ Use this? # This is default 'yes' in YOLO mode so you can just hit enter.
 
 DONE!!
 ```
+
+---
+
 ## WORKFLOW
 
 ### NORMAL 
@@ -130,4 +110,4 @@ DONE!!
 
 ## License
 
-This project is part of the [Utilitis](https://github.com/ssannssarr/Utilitis) repository.
+This project is under GPL-v3. See the the LICENSE [here](../LICENSE)
