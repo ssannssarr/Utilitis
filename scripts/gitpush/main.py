@@ -170,15 +170,16 @@ def YOLO():
 
 		run(['git','add','.'])
 
-		stat = run(['git','diff','--cached','--stat']).stdout or ""
-		raw_diff  = run(['git','diff','--cached']).stdout or ""
-		if len(raw_diff) >= 4000:
-			c.print('[yellow]Diff truncted at 4000 chars [/]')
-		diff = raw_diff[:4000]
+		with c.status("Extracting Diff ...", spinner="dots",spinner_style="#AB82FF"):
+			stat = run(['git','diff','--cached','--stat']).stdout or ""
+			raw_diff  = run(['git','diff','--cached']).stdout or ""
+			if len(raw_diff) >= 4000:
+				c.print('[yellow]Diff truncted at 4000 chars [/]')
+			diff = raw_diff[:4000]
 
-		if not diff.strip():
-			c.print("[yellow]No Changes To commit.[/]")
-			return 
+			if not diff.strip():
+				c.print("[yellow]No Changes To commit.[/]")
+				return 
 
 		prompt =  f"""
 		Generate ONE conventional commit message.
