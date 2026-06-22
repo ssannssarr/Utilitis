@@ -29,7 +29,7 @@ Each script is placed in its own dedicated folder and includes its own `README.m
 
 |**Project Name**|**Description**|
 |---|---|
-|[Gitpush](./gitpush)| As per the name it autmatomates git add to pus workflow with AI writing a conventional commit msg|
+|[Gitpush](./scripts/gitpush)| As per the name it autmatomates git add to pus workflow with AI writing a conventional commit msg|
 |More projects| more projects comming soon and all of you are welcome to make this repo full|
 
 ---
