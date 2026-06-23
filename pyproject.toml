@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [project.scripts]
-gitpush = "scripts.gitpush.main:main"
+gitpush = "scripts.gitpush.main:NORMAL"
 gitpush-y = "scripts.gitpush.main:YOLO"
 
 [tool.setuptools.packages.find]
