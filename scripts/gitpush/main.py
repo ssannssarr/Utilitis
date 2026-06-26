@@ -2,6 +2,7 @@ from rich.console import Console
 import subprocess as sp
 import os
 from API import to_ai
+import sys
 
 
 c = Console()
@@ -178,4 +179,7 @@ def YOLO():
 
 
 if __name__ == '__main__':
-	YOLO()
+	if sys.argv[1] == '-y':
+		YOLO()
+	else:
+		NORMAL()
