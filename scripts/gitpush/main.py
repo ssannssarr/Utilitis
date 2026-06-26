@@ -1,7 +1,7 @@
 from rich.console import Console
 import subprocess as sp
 import os
-from llm import to_ai
+from API import to_ai
 
 
 c = Console()
@@ -178,4 +178,4 @@ def YOLO():
 
 
 if __name__ == '__main__':
-	main()
+	YOLO()
