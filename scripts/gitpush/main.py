@@ -1,7 +1,8 @@
 from rich.console import Console
 import subprocess as sp
-import requests as rq
-import os 
+import os
+from API import to_ai
+import sys
 
 
 c = Console()
@@ -17,6 +18,7 @@ def run(cmd):
 	)
 
 
+<<<<<<< HEAD
 def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 	url = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -52,8 +54,9 @@ def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 	return reply 
 
 
+=======
+>>>>>>> b1b48cd2b816b25220b4eb06c483486b4f13ce77
 def build_prompt(stat, raw_diff):
-	diff = raw_diff[:4000]
 	note = ""
 	if len(raw_diff) > 4000:
 		c.print('[yellow]Diff truncated at 4000 chars.[/]')
@@ -67,44 +70,90 @@ def build_prompt(stat, raw_diff):
 	{note}
 
 	Diff:
-	{diff}
+	{raw_diff[:4000]}
 	"""
 
-def main():
-	try:
-		API_KEY = os.getenv("OPENROUTER_API_KEY")
-		if not API_KEY:
-			c.print('[red]OPENROUTER_API_KEY Not Found IN ENVIROMENT!![/]')
-			c.print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-v1-...<your-API-key>"')
+
+def is_repo():
+	if run(['git','rev-parse','--is-inside-work-tree']).returncode != 0:
+		c.print('[red]Not Inside Git Repo[/]')
+		exit()
+
+def this_branch():
+	branch = run(["git",'branch','--show-current']).stdout.strip() or ''
+	if not branch:
+		c.print('[red]Detached HEAD detected. Please checkout a branch before using gitpush.[/]')
+		exit()
+	c.print(f'[#ffd39b]Will you push to branch:[/] [green] {branch} [/]')
+	branch_check = input("[y/n]>> ").strip()
+	if not branch_check.lower() in ('y','yes'):
+		c.print('[yellow]User Aborted[/]')
+		c.print('[yellow]hint: use git push -u origin <branch>')
+		exit()
+
+def this_files():
+	files = run(['git','status','--short']).stdout.strip() or ''
+	if not files:
+		c.print('[yellow]No Changes To commit[/]')
+		exit()
+	c.print('[#ffd39b]\nThis Files will be added[/]')
+	c.print(files)
+	f_check = input("[y/n]>>").strip()
+	if not f_check.lower() in ('yes','y'):
+		c.print("[yellow]Add in your Own[/]")
+		exit()
+
+
+def get_ai_message(prompt):
+	with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
+		try:
+			return to_ai(prompt)
+		except Exception as e:
+			run(['git','reset'])
+			c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
 			exit()
 
-		if run(['git','rev-parse','--is-inside-work-tree']).returncode != 0:
-			c.print('[red]Not Inside Git Repo[/]')
-			exit()
+def get_custom_message():
+	msg = ''
+	while not msg:
+		c.print("[#ffd39b]Enter commit message:[/] ")
+		msg = input(">> ").strip()
+	return msg
 
-		branch = run(["git",'branch','--show-current']).stdout.strip() or ''
-		if not branch:
-			c.print('[red]Detached HEAD detected. Please checkout a branch before using gitpush.[/]')
-			exit()
-		c.print(f'[#ffd39b]Will you push to branch:[/] [green] {branch} [/]')
-		branch_check = input("[y/n]>> ").strip()
-		if not branch_check.lower() in ('y','yes'):
-			c.print('[yellow]User Aborted[/]')
-			c.print('[yellow]hint: use git push -u origin <branch>')
-			exit()
+def commit_and_push(msg):
+	with c.status("",spinner="dots",spinner_style="#AB82FF"):	
+		commit = run(['git','commit','-m',msg])
+		c.print(commit.stdout)
+		c.print(commit.stderr)
 
-		files = run(['git','status','--short']).stdout.strip() or ''
-		if not files:
-			c.print('[yellow]No Changes To commit[/]')
-			exit()
-		c.print('[#ffd39b]\nThis Files will be added[/]')
-		c.print(files)
-		f_check = input("[y/n]>>").strip()
-		if not f_check.lower() in ('yes','y'):
-			c.print("[yellow]Add in your Own[/]")
-			exit()
+	if commit.returncode == 0:
+		with c.status("",spinner="dots",spinner_style="#AB82FF"):
+			pull = run(['git','pull','--rebase'])
+			c.print(pull.stdout)
+			c.print(pull.stderr)
+			if pull.returncode == 0:
+				push = run(['git','push'])
+				c.print(push.stdout)
+				c.print(push.stderr)
+				if push.returncode == 0:
+					c.print("[green]DONE!![/]")
+				else:
+					c.print("[red]Push Failed!![/]")
+			else:
+				c.print('[red]Pull Failed [/]')
+	else:
+		c.print("[red]Commit Failed!![/]")
 
+<<<<<<< HEAD
 		run(['git','add','-A'])
+=======
+def NORMAL():
+	try:		
+		is_repo()
+		this_branch()
+		this_files()
+		run(['git','add','.'])
+>>>>>>> b1b48cd2b816b25220b4eb06c483486b4f13ce77
 
 		stat = run(['git','diff','--cached','--stat']).stdout or ""
 		raw_diff  = run(['git','diff','--cached']).stdout or ""
@@ -113,51 +162,15 @@ def main():
 			return 
 
 		prompt = build_prompt(stat, raw_diff)
-
-		with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
-			try:
-				msg = to_ai(prompt,API_KEY)
-			except rq.exceptions.ConnectionError as e:
-				run(['git','reset'])
-				c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
-				c.print('[yellow]hint:Chenk Your Network Connection[/]')
-				exit()
-			except Exception as e:
-				c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
-				run(['git','reset'])
-				exit()
+		msg = get_ai_message(prompt)
 
 		c.print(f'\nAI:{msg}')
 		c.print('[yellow]\nUse this? [y/n][/]')
 		confirm = input(">> ").strip()
 		if not confirm.lower() in ('y','yes'):
-			msg = ''
-			while not msg:
-				c.print("[#ffd39b]Enter commit message:[/] ")
-				msg = input(">> ").strip()
+			msg = get_custom_message()
 
-		with c.status("",spinner="dots",spinner_style="#AB82FF"):	
-			commit = run(['git','commit','-m',msg])
-			c.print(commit.stdout)
-			c.print(commit.stderr)
-
-		if commit.returncode == 0:
-			with c.status("",spinner="dots",spinner_style="#AB82FF"):
-				pull = run(['git','pull','--rebase'])
-				c.print(pull.stdout)
-				c.print(pull.stderr)
-				if pull.returncode == 0:
-					push = run(['git','push'])
-					c.print(push.stdout)
-					c.print(push.stderr)
-					if push.returncode == 0:
-						c.print("[green]DONE!![/]")
-					else:
-						c.print("[red]Push Failed!![/]")
-				else:
-					c.print('[red]Pull Failed [/]')
-		else:
-			c.print("[red]Commit Failed!![/]")
+		commit_and_push(msg)
 	except KeyboardInterrupt:
 		c.print('[yellow]Aborted By User[/]')
 	except Exception as e:
@@ -173,15 +186,12 @@ def YOLO():
 			c.print('[yellow]hint:export OPENROUTER_API_KEY="sk-or-v1-...<your-API-key>"')
 			exit()
 
-		if run(['git','rev-parse','--is-inside-work-tree']).returncode != 0:
-			c.print('[red]Not Inside Git Repo[/]')
-			exit()
+		is_repo()
 
 		branch = run(["git",'branch','--show-current']).stdout.strip() or ''
 		if not branch:
 			c.print('[red]Detached HEAD detected. Please checkout a branch before using gitpush-y.[/]')
 			exit()
-
 
 		run(['git','add','.'])
 
@@ -193,51 +203,15 @@ def YOLO():
 				return 
 
 		prompt = build_prompt(stat, raw_diff)
-
-		with c.status("Thinking...",spinner="dots",spinner_style="#AB82FF"):
-			try:
-				msg = to_ai(prompt,API_KEY)
-			except rq.exceptions.ConnectionError as e:
-				run(['git','reset'])
-				c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
-				c.print('[yellow]hint:Chenk Your Network Connection[/]')
-				exit()
-			except Exception as e:
-				c.print(f"[red]\n{type(e).__name__}[/]:\n{e}")
-				run(['git','reset'])
-				exit()
+		msg = get_ai_message(prompt)
 
 		c.print(f'\nAI:{msg}')
 		c.print('[yellow]\nUse this? [y/n][/]')
 		confirm = input(">> ").strip()
 		if confirm.lower() in ('n','no'):
-			msg = ''
-			while not msg:
-				c.print("[#ffd39b]Enter commit message:[/] ")
-				msg = input(">> ").strip()
+			msg = get_custom_message()
 
-		with c.status("",spinner="dots",spinner_style="#AB82FF"):	
-			commit = run(['git','commit','-m',msg])
-			c.print(commit.stdout)
-			c.print(commit.stderr)
-
-		if commit.returncode == 0:
-			with c.status("",spinner="dots",spinner_style="#AB82FF"):
-				pull = run(['git','pull','--rebase'])
-				c.print(pull.stdout)
-				c.print(pull.stderr)
-				if pull.returncode == 0:
-					push = run(['git','push'])
-					c.print(push.stdout)
-					c.print(push.stderr)
-					if push.returncode == 0:
-						c.print("[green]DONE!![/]")
-					else:
-						c.print("[red]Push Failed!![/]")
-				else:
-					c.print('[red]Pull Failed [/]')
-		else:
-			c.print("[red]Commit Failed!![/]")
+		commit_and_push(msg)
 	except KeyboardInterrupt:
 		c.print('[yellow]Aborted By User[/]')
 	except Exception as e:
@@ -247,4 +221,7 @@ def YOLO():
 
 
 if __name__ == '__main__':
-	main()
+	if sys.argv[1] == '-y':
+		YOLO()
+	else:
+		NORMAL()
