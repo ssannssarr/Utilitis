@@ -26,7 +26,7 @@ def to_ai(prompt,API_KEY): # The messages that will go to Cloud or local AI
 	}
 
 	data = {
-		"model":"openai/gpt-oss-120b:free",
+		"model":"openrouter/free",
 		"messages":[
 			{
 				"role":"system",
@@ -104,7 +104,7 @@ def main():
 			c.print("[yellow]Add in your Own[/]")
 			exit()
 
-		run(['git','add','.'])
+		run(['git','add','-A'])
 
 		stat = run(['git','diff','--cached','--stat']).stdout or ""
 		raw_diff  = run(['git','diff','--cached']).stdout or ""
